@@ -1,0 +1,113 @@
+1.pathway.txt文件每一行是1个pathway的id，要求打印对应通路图片的网址，如ko00010通路的图片网址为http://www.genome.jp/kegg/pathway/ko/ko00010.png。（linux）15分
+要求：
+A. 请打印每一行的格式为id:网址；
+B. 输出到文件pathway_website.xls中；
+C. pathway.txt见华为云服务器地址：/home/zhangqingchen/teacher/pathway.txt，请注意文件的格式问题、空行等问题，不要动原来的原件，自己cp一份到自己目录下。
+> while read A;do new=`echo ${A}|sed 's/\n//'`;echo "http://www.genome.jp/kegg/pathway/ko/"${new}".png" >> pathway_website.xls;done<pathway.txt
+
+2.	打印counts.oecloud.xls（tab分隔文件）差异筛选文件中奇数行，并求每行的总和并按照升序排序输出到文件counts.odd_number.xls。（linux优先，其他语言类型也可，如果使用其他语言根据答题运用熟练度酌情扣分）20分
+要求：
+A.	筛选奇数行；
+B.	求和；
+C.	排序；
+D.	输出到文件counts.odd_number.xls，counts.oecloud.xls见华为云服务器地址：/home/zhangqingchen/teacher/counts.odd_number.xls
+
+> less -S counts.oecloud.xls |awk 'NR%2==1{print $0}'|sed '1d'|awk '{b[NR]=$0;for(i=2;i<=NF;i++)a[NR]+=$i;}END{for(i=1;i<=NR;i++)print b[i]"\t"a[i]}' |sort -k 13>/home/zhangqingchen/teacher/counts.odd_number.xls
+
+3.	请对[3,45,67,8,86,865,44,3,5,673,56,384,1,2,3,4,313,435,76,908,1234]list中的元素进行排序、求取最大值、最小值、中位数值、平均值并得到去重复的结果；请用python回答此题：15分
+要求：
+A.请计算上述内容的功能；
+B.请提供至少2种方法去重复；
+
+>lista = [3,45,67,8,86,865,44,3,5,673,56,384,1,2,3,4,313,435,76,908,1234]
+# 进行排序；list c & list d 为最终去重结果
+>listb = set(lista)
+>listc = sorted(listb)
+# 第二种办法进行去重
+>listd =[]
+>for i in lista:
+if i not in listd:
+•       listd.append(i)
+•  
+# 求最大值、最小值、中位数值、平均值
+>listmin = min(listb)
+>listmax = max(listb)
+>import numpy as np
+>np.mean(lista)
+>np.median(lista)
+
+
+4.	读取“酒店数据.xlsx”：
+要求：
+A.对每列的名称进行重命名，字段1为酒店名称，字段2为酒店类型，字段3为城市，字段4为地区，字段5为街道，字段6为评分，字段7为投票人数，字段8为酒店价格；
+B.按照评分，投票人数排序，统计出不同酒店类型的数目以及不同地区的数目；
+C.合并城市，地区，街道，中间用’-’连接；
+请用Python 回答此题：20分
+
+
+>import sys
+>import pandas as pd
+#读取文件
+>hotel=pd.read_excel("%s" % sys.argv[1] )
+# 进行统计筛选
+>new_columns_list1 =['酒店名称','酒店类型','城市','地区','街道','评分','投票人数','酒店价格']
+>new_columns = pd.core.indexes.base.Index(new_columns_list1)
+>hotel.columns = new_columns
+>hotel.sort_values(by=['评分','投票人数'],ascending=[True,True])
+>hotel['地点']=hotel['城市']+'-'+hotel['地区']+'-'+hotel['街道']
+>hotel.drop(hotel.iloc[:,[2,3,4]],axis=1,inplace=True)
+>wb=pd.ExcelWriter('new.xlsx')
+>hotel.to_excel(wb,sheet_name='酒店', index=False)
+# 保存并关闭
+>wb.save()
+>wb.close()
+
+
+5.	输出向量1:100的和、偶数、奇数、中位数、平均数，四分位数。请用R回答此题，10分。
+要求：
+偶数和奇数为输出向量，其他数值请在前面注明表示含义，比如和：12345。
+
+
+# 定义all包含1到100的值，并输出平均数，中位数，四分位数
+>all <- 1:100
+>mean(all)
+>median(all)
+>quantile(all)[2]
+>quantile(all)[4]
+#求和
+> i <- 1
+>sum <- 0
+>while(i<=100){
+   sum <- sum+i
+   i <- i+1
+}
+# 输出偶数和奇数
+>single <- c()
+>double <- c()
+>for(i in 1:100)
++ {if (i%%2==0)}{double<-(i)}
+>for(i in 1:100)
++ {if (i%%2!=0)}{single<-(i)}
+
+
+6.	某班学生考试成绩如下表所示，对每位学生的各科成绩求均值，要求小数点保留两位小数，并将求得的均值添加为表的最后一列score，请用R回答此题，20分。
+Name<-c("John Davis","Angeal Williams","Bullwinkle Moose","David Jones","Janice Markhammer","Chery Cushing","Reuven Ytzrhak","Greg Knox","Joel Englad","Mary Rayburm")
+Math<-c(502,600,412,358,495,512,410,625,573,522)
+Science<-c(95,99,80,82,75,85,80,95,89,86)
+English<-c(25,22,18,15,20,28,15,30,27,18)
+要求：
+A.	求取均值；
+B.	增加一列score；
+C.	将均值画成散点图；
+
+
+> library(ggplot2)
+>Name<-c("John Davis","Angeal Williams","Bullwinkle Moose","David Jones","Janice Markhammer","Chery Cushing","Reuven Ytzrhak","Greg Knox","Joel Englad","Mary Rayburm")
+>Math<-c(502,600,412,358,495,512,410,625,573,522)
+Science<-c(95,99,80,82,75,85,80,95,89,86)
+English<-c(25,22,18,15,20,28,15,30,27,18)
+>matrix<-data.frame(Name,Math,Science,English)
+>score<-apply(a[2:4],1,mean,na.rm=T)
+>round(score,2)
+>matrix2<-cbind(matrix,score)
+>ggplot(matrix2,aes(x=Name,y=score))
